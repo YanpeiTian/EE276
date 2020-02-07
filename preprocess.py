@@ -8,7 +8,7 @@ import glob
 
 PATCHSIZE = 128
 
-for filename in glob.glob('Data/valid_P/*.png'): #assuming gif
+for filename in glob.glob('Data/valid_P/*.png'):
     # Open an image
     im=Image.open(filename)
 
