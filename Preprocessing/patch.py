@@ -19,10 +19,13 @@ def patch_write(img_name):
 	# Writing image info
 	data = {}
 	data[const.NAME] = img_name
+	data[const.SIZE] = img.shape
 	with open(path + '\\' + 'data.txt', 'w') as outfile:
 		json.dump(data, outfile)
 
-	print(img.shape)
+	h_filled = img.shape[0]//const.PATCH_SIZE[0] + 1
+	w_filled = img.shape[1]//const.PATCH_SIZE[1] + 1
+	img_filled = np.array()
 
 
 def main():
