@@ -51,7 +51,7 @@ def main():
 
     x_train,x_test=data.get_data()
 
-    model,encoder,decoder=dense_models.single_layer()
+    # model,encoder,decoder=dense_models.single_layer()
     # 50,992 parameters
     # compression ratio=24.5 ; mse loss=0.023465356
 
@@ -59,7 +59,7 @@ def main():
     # 793,792 parameters
     # compression ratio= 98; mse loss=0.016756587
 
-    # model,encoder,decoder=dense_models.deep_model()
+    model,encoder,decoder=dense_models.deep_model()
     # 222,384 parameters
     # compression ratio= 24.5; mse loss=0.008605147
 
@@ -74,6 +74,10 @@ def main():
     # x_test = x_test.reshape((len(x_test), 28,28,1))
     # 13.289 parameters
     # compression ratio= 98; mse loss=0.0266319
+
+    # model,encoder,decoder=conv_models.DQN_model()
+    # x_train = x_train.reshape((len(x_train), 28,28,1))
+    # x_test = x_test.reshape((len(x_test), 28,28,1))
 
     print("Training set shape: %f",x_train.shape)
     print("Testing set shape: %f",x_test.shape)
