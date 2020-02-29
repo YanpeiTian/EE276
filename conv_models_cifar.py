@@ -3,6 +3,7 @@ from keras.models import Model
 from keras import backend as K
 from keras import regularizers,optimizers
 
+import pdb
 def conv_model():
 
     # Encoder
@@ -19,7 +20,7 @@ def conv_model():
 
 
     # Decoder
-    decoder_input = Input(shape=(16,16,8))
+    decoder_input = Input(shape=(4,4,8))
     x = Conv2D(8, (3, 3), activation='relu', padding='same')(decoder_input)
     x = UpSampling2D((2, 2))(x)
     x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
