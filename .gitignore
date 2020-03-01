@@ -2,3 +2,4 @@
 Data/
 save_models/
 __pycache__/
+.log/

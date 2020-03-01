@@ -5,13 +5,14 @@ from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
 from unet import U_Net
+from unet_strip import U_Net_In, U_Net_Out,AutoEncoder
 import numpy as np
 import matplotlib.pyplot as plt
 from conv_models_cifar import conv_model, mixed_model, DQN_model
 from keras.callbacks import TensorBoard
 
 BATCH_SIZE = 64
-EPOCH_NUM = 10
+EPOCH_NUM = 100 
 MAX_ITER = 1000
 
 def main():
@@ -30,19 +31,18 @@ def main():
     x_train /=255
 
     # model
-    # autoencoder, encoder, decoder = U_Net()
-    autoencoder = U_Net()
+    autoencoder=AutoEncoder()
 
     def ssim_loss(img1,img2):
-        return tf.image.ssim(img1, img2, max_val=1)
+        return tf.image.ssim(img1, img2, max_val=1.0)
 
     autoencoder.compile(optimizer=tf.keras.optimizers.Adam(1e-4), loss=ssim_loss)
     # autoencoder.compile(optimizer='adam', loss='mean_squared_error')
     autoencoder.fit(x_train, x_train, epochs=EPOCH_NUM, batch_size=BATCH_SIZE, shuffle=True, validation_data=(x_test, x_test), callbacks=[TensorBoard(log_dir='.log/')])
 
     #
-    # encoder.save(os.path.join(save_dir, 'encoder.h5'))
-    # decoder.save(os.path.join(save_dir, 'decoder.h5'))
+    autoencoder.encoder.save_weights(os.path.join(save_dir, 'encoder.h5'))
+    autoencoder.decoder.save_weights(os.path.join(save_dir, 'decoder.h5'))
 
 if __name__ == '__main__':
     main()
