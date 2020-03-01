@@ -6,11 +6,12 @@ from keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
 from unet import U_Net
 import numpy as np
-
+import matplotlib.pyplot as plt
 from conv_models_cifar import conv_model, mixed_model, DQN_model
+from keras.callbacks import TensorBoard
 
 BATCH_SIZE = 64
-EPOCH_NUM = 100
+EPOCH_NUM = 10
 MAX_ITER = 1000
 
 def main():
@@ -35,9 +36,10 @@ def main():
     def ssim_loss(img1,img2):
         return tf.image.ssim(img1, img2, max_val=1)
 
-    autoencoder.compile(optimizer='adam', loss=ssim_loss)
+    autoencoder.compile(optimizer=tf.keras.optimizers.Adam(1e-4), loss=ssim_loss)
     # autoencoder.compile(optimizer='adam', loss='mean_squared_error')
-    autoencoder.fit(x_train, x_train, epochs=EPOCH_NUM, batch_size=BATCH_SIZE, shuffle=True, validation_data=(x_test, x_test))
+    autoencoder.fit(x_train, x_train, epochs=EPOCH_NUM, batch_size=BATCH_SIZE, shuffle=True, validation_data=(x_test, x_test), callbacks=[TensorBoard(log_dir='.log/')])
+
     #
     # encoder.save(os.path.join(save_dir, 'encoder.h5'))
     # decoder.save(os.path.join(save_dir, 'decoder.h5'))
