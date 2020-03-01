@@ -42,7 +42,7 @@ class U_Net(tf.keras.Model):
         self.d6 = Dropout(0.1)
         self.conv6 = Conv2D(filters=n_filters * 1, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal')
 
-        self.last_conv = Conv2D(1, (1, 1), activation='sigmoid')
+        self.last_conv = Conv2D(3, (1, 1), activation='sigmoid')
         # END CODE #
 
     def call(self, inputs):
@@ -63,7 +63,11 @@ class U_Net(tf.keras.Model):
         p31 = self.p31(c31)
         d31 = self.d31(p31)
 
+        # print(d31.shape)
+
         mid_conv = self.mid_conv(d31)
+
+        # print(mid_conv.shape)
 
         u32 = self.upconv32(mid_conv)
         u32 = concatenate([u32, c31])

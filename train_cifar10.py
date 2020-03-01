@@ -4,6 +4,8 @@ import keras
 from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
+from unet import U_Net
+import numpy as np
 
 from conv_models_cifar import conv_model, mixed_model, DQN_model
 
@@ -21,20 +23,24 @@ def main():
     print('x_train shape:', x_train.shape)
     print(x_train.shape[0], 'train samples')
     print(x_test.shape[0], 'test samples')
-
-    return
+    x_train = x_train.astype(np.float32)
+    x_test = x_test.astype(np.float32)
+    x_test /=255
+    x_train /=255
 
     # model
-    autoencoder, encoder, decoder = conv_model()
+    # autoencoder, encoder, decoder = U_Net()
+    autoencoder = U_Net()
 
     def ssim_loss(img1,img2):
-        return tf.image.ssim(img1, img2, max_val=1.0)
+        return tf.image.ssim(img1, img2, max_val=1)
 
-    autoencoder.compile(optimizer='adadelta', loss=ssim_loss)
+    autoencoder.compile(optimizer='adam', loss=ssim_loss)
+    # autoencoder.compile(optimizer='adam', loss='mean_squared_error')
     autoencoder.fit(x_train, x_train, epochs=EPOCH_NUM, batch_size=BATCH_SIZE, shuffle=True, validation_data=(x_test, x_test))
-
-    encoder.save(os.path.join(save_dir, 'encoder.h5'))
-    decoder.save(os.path.join(save_dir, 'decoder.h5'))
+    #
+    # encoder.save(os.path.join(save_dir, 'encoder.h5'))
+    # decoder.save(os.path.join(save_dir, 'decoder.h5'))
 
 if __name__ == '__main__':
     main()
