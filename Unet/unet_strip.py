@@ -9,23 +9,23 @@ class U_Net_In(tf.keras.Model):
         # FILL IN CODE HERE #
         n_filters = 16
 
-        self.conv1 = Conv2D(filters=n_filters, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal')
+        self.conv1 = Conv2D(filters=n_filters, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal', use_bias=True)
         self.p1 = MaxPool2D((2, 2))
         self.d1 = Dropout(0.1)
 
-        self.conv2 = Conv2D(filters=n_filters * 2, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal')
+        self.conv2 = Conv2D(filters=n_filters * 2, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal', use_bias=True)
         self.p2 = MaxPool2D((2, 2))
         self.d2 = Dropout(0.1)
 
-        self.conv3 = Conv2D(filters=n_filters * 4, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal')
+        self.conv3 = Conv2D(filters=n_filters * 4, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal', use_bias=True)
         self.p3 = MaxPool2D((2, 2))
         self.d3 = Dropout(0.1)
 
-        self.conv31 = Conv2D(filters=n_filters * 8, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal')
+        self.conv31 = Conv2D(filters=n_filters * 8, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal', use_bias=True)
         self.p31 = MaxPool2D((2, 2))
         self.d31 = Dropout(0.1)
 
-        self.mid_conv_in = Conv2D(filters=n_filters * 8, kernel_size = (3, 3), padding='same', kernel_initializer='he_normal')
+        self.mid_conv_in = Conv2D(filters=n_filters * 8, kernel_size = (3, 3), padding='same', kernel_initializer='he_normal', use_bias=True)
 
     def call(self, inputs):
         # FILL IN CODE HERE #
@@ -53,25 +53,25 @@ class U_Net_Out(tf.keras.Model):
         super(U_Net_Out, self).__init__()
         n_filters = 16
 
-        self.mid_conv_out = Conv2D(filters=n_filters * 8, kernel_size = (3, 3), padding='same', kernel_initializer='he_normal')
+        self.mid_conv_out = Conv2D(filters=n_filters * 8, kernel_size = (3, 3), padding='same', kernel_initializer='he_normal', use_bias=True)
 
         self.upconv32 = UpSampling2D((2, 2))
         self.d32 = Dropout(0.1)
-        self.conv32 = Conv2D(filters=n_filters * 8, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal')
+        self.conv32 = Conv2D(filters=n_filters * 8, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal', use_bias=True)
 
         self.upconv1 = UpSampling2D((2, 2))
         self.d4 = Dropout(0.1)
-        self.conv4 = Conv2D(filters=n_filters * 4, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal')
+        self.conv4 = Conv2D(filters=n_filters * 4, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal', use_bias=True)
 
         self.upconv2 = UpSampling2D((2, 2))
         self.d5 = Dropout(0.1)
-        self.conv5 = Conv2D(filters=n_filters * 2, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal')
+        self.conv5 = Conv2D(filters=n_filters * 2, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal', use_bias=True)
 
         self.upconv3 = UpSampling2D((2, 2))
         self.d6 = Dropout(0.1)
-        self.conv6 = Conv2D(filters=n_filters * 1, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal')
+        self.conv6 = Conv2D(filters=n_filters * 1, kernel_size=(3, 3), padding='same', kernel_initializer='he_normal', use_bias=True)
 
-        self.last_conv = Conv2D(3, (1, 1), activation='sigmoid')
+        self.last_conv = Conv2D(1, (1, 1), activation='sigmoid')
         # END CODE #
 
     def call(self, inputs):
@@ -112,14 +112,3 @@ class AutoEncoder(tf.keras.Model):
         encoded=self.encoder(inputs)
         decoded=self.decoder(encoded)
         return decoded
-
-# def autoencoder(shape=(128,128,3)):
-#     input = Input(shape=shape)
-#     encoder=U_Net_In()
-#     decoder=U_Net_Out()
-#
-#     encoded=encoder(input)
-#     decoded=decoder(encoded)
-#     ae = Model(input, decoded)
-#
-#     return ae,encoder,decoder

@@ -3,8 +3,11 @@ from keras.models import Model
 import data
 import dense_models, conv_models
 import numpy as np
+from keras.datasets import cifar10,mnist
 
 import matplotlib.pyplot as plt
+
+EPOCHS=10
 
 # Models summary:
 # dense_models:
@@ -16,7 +19,9 @@ import matplotlib.pyplot as plt
 #   2. mixed_model (3+2 layer)
 
 def train(model,x_train,x_test):
-    model.fit(x_train, x_train,epochs=50,batch_size=256,shuffle=True,validation_data=(x_test, x_test))
+    x_train=x_train.reshape((-1,28,28,1))
+    x_test=x_test.reshape((-1,28,28,1))
+    model.fit(x_train, x_train,epochs=EPOCHS,batch_size=256,shuffle=True,validation_data=(x_test, x_test))
 
 def test(encoder,decoder,x_test):
 
@@ -49,7 +54,8 @@ def test(encoder,decoder,x_test):
 
 def main():
 
-    x_train,x_test=data.get_data()
+    # x_train,x_test=data.get_data()
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
     # model,encoder,decoder=dense_models.single_layer()
     # 50,992 parameters
@@ -59,7 +65,7 @@ def main():
     # 793,792 parameters
     # compression ratio= 98; mse loss=0.016756587
 
-    model,encoder,decoder=dense_models.deep_model()
+    # model,encoder,decoder=dense_models.deep_model()
     # 222,384 parameters
     # compression ratio= 24.5; mse loss=0.008605147
 
@@ -69,7 +75,7 @@ def main():
     # 4,385 parameters
     # compression ratio= 6.125; mse loss=0.009870365
 
-    # model,encoder,decoder=conv_models.mixed_model()
+    model,encoder,decoder=conv_models.mixed_model()
     # x_train = x_train.reshape((len(x_train), 28,28,1))
     # x_test = x_test.reshape((len(x_test), 28,28,1))
     # 13.289 parameters
@@ -88,7 +94,7 @@ def main():
     encoder.save('models/encoder.h5')
     decoder.save('models/decoder.h5')
 
-    test(encoder,decoder,x_test)
+    # test(encoder,decoder,x_test)
 
 
 if __name__ == "__main__":
